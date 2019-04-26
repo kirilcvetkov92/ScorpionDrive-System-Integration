@@ -108,13 +108,13 @@ class TLDetector(object):
         return self.get_closest_index(pose, self.lights)
 
     def get_closest_stop_line(self, pose):
-        return self.get_closest_index(pose, self.get_stop_line_positions())
+        return self.get_closest_index(pose, self.get_stop_line_3d_positions())
 
     def get_car_waypoint_index(self):
         return self.get_closest_waypoint(self.pose.pose.position)
 
-    def get_car_waypoint_poistion(self):
-        car_inx = self.get_car_index()
+    def get_car_waypoint_position(self):
+        car_inx = self.get_car_waypoint_index()
         car_pos = self.waypoints.waypoints[car_inx].pose.pose.position
         return car_pos
 
@@ -128,6 +128,18 @@ class TLDetector(object):
             p.pose.pose.position.z = 0.0
             stop_line_positions.append(p)
         return stop_line_positions
+
+    def get_closest_index(self, pose, positions):
+        minimal_distance = 9999999
+        index = -1
+
+        for i in range(len(positions)):
+            distance = self.distance_of_positions(pose, positions[i].pose.pose.position)
+            if distance < minimal_distance:
+                minimal_distance = distance
+                index = i
+
+        return index
 
     def get_light_state(self, light):
         """Determines the current color of the traffic light
@@ -167,7 +179,7 @@ class TLDetector(object):
 
             #get car index, car position
             car_waypoiny_inx = self.get_car_waypoint_index()
-            car_waypoint_pos = self.get_car_waypoint_poistion()
+            car_waypoint_pos = self.get_car_waypoint_position()
 
             #get light index
             light_inx = self.get_closest_light(car_waypoint_pos)
