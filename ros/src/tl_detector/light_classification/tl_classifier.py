@@ -16,9 +16,9 @@ import cv2
 class TLClassifier(object):
 
     _defaults = {
-        "model_path": '/model_data/yolo.h5',
-        "anchors_path": '/model_data/yolo_anchors.txt',
-        "classes_path": '/model_data/voc_classes.txt',
+        "model_path": 'light_classification/model_data/yolo.h5',
+        "anchors_path": 'light_classification/model_data/yolo_anchors.txt',
+        "classes_path": 'light_classification/model_data/voc_classes.txt',
         "score": 0.6,
         "iou": 0.5,
         "model_image_size": (416, 416),
