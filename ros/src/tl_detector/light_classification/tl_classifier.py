@@ -6,8 +6,8 @@ import numpy as np
 from keras import backend as K
 from keras.models import load_model
 from keras.layers import Input
-from ros.src.tl_detector.light_classification.yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
-from ros.src.tl_detector.light_classification.yolo3.utils import letterbox_image
+from yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
+from yolo3.utils import letterbox_image
 import os
 from PIL import Image
 import cv2
