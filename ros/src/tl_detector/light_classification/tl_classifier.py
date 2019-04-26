@@ -8,6 +8,7 @@ from keras.models import load_model
 from keras.layers import Input
 from yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
 from yolo3.utils import letterbox_image
+
 import os
 from PIL import Image
 import cv2
@@ -15,9 +16,9 @@ import cv2
 class TLClassifier(object):
 
     _defaults = {
-        "model_path": 'model_data/yolo.h5',
-        "anchors_path": 'model_data/yolo_anchors.txt',
-        "classes_path": 'model_data/voc_classes.txt',
+        "model_path": '/model_data/yolo.h5',
+        "anchors_path": '/model_data/yolo_anchors.txt',
+        "classes_path": '/model_data/voc_classes.txt',
         "score": 0.6,
         "iou": 0.5,
         "model_image_size": (416, 416),
