@@ -50,12 +50,10 @@ class TLClassifier(object):
 
         try:
             self.yolo_model = load_model(model_path, compile=False)
-            print('se e vo red')
         except:
             self.yolo_model = tiny_yolo_body(Input(shape=(None, None, 3)), num_anchors // 2, num_classes) \
                 if is_tiny_version else yolo_body(Input(shape=(None, None, 3)), num_anchors // 3, num_classes)
             self.yolo_model.load_weights(self.model_path)  # make sure model, anchors and classes match
-            print('se e vo red2')
         print('{} model, anchors, and classes loaded.'.format(model_path))
 
         # Generate colors for drawing bounding boxes.
@@ -102,12 +100,9 @@ class TLClassifier(object):
 
         start = timer()
 
-        # print('1')
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        # print(image.shape)
         image = Image.fromarray(image)
-        # print(image.width)
-        # print('2')
+
         if self.model_image_size != (None, None):
             assert self.model_image_size[0] % 32 == 0, 'Multiples of 32 required'
             assert self.model_image_size[1] % 32 == 0, 'Multiples of 32 required'
@@ -137,7 +132,7 @@ class TLClassifier(object):
             predicted_class = self.class_names[c]
             score = out_scores[i]
 
-            print('state predicted celosno : ', predicted_class)
+            # print('state predicted : ', predicted_class)
             return self.class_msgs[predicted_class], score
             # return predicted_class, score
         end = timer()

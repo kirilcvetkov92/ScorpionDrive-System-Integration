@@ -49,7 +49,6 @@ class TLDetector(object):
         self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
 
-        print('init state')
         self.state = TrafficLight.UNKNOWN
         self.last_state = TrafficLight.UNKNOWN
         self.last_wp = -1
@@ -61,7 +60,6 @@ class TLDetector(object):
         self.pose = msg
 
     def waypoints_cb(self, waypoints):
-        print('okay')
         self.waypoints = waypoints
 
     def traffic_cb(self, msg):
@@ -78,8 +76,8 @@ class TLDetector(object):
         # Skip Traffic Light Detection if processing takes longer than current frequency, avoid queueing
         if self.image_processing_time > 0:
             self.image_processing_time -= self.sleep(10.0)
-            # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
             return
+            # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
 
         self.has_image = True
         self.camera_image = msg
@@ -95,7 +93,6 @@ class TLDetector(object):
         of times till we start using it. Otherwise the previous stable state is
         used.
         '''
-        print('proverka')
 
         if self.state != state:
             self.state_count = 0
@@ -175,7 +172,6 @@ class TLDetector(object):
             return False
 
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
-        print('shapesss', cv_image.shape)
         # Get classification
         return self.light_classifier.get_classification(cv_image)
 
@@ -192,7 +188,7 @@ class TLDetector(object):
 
         # List of positions that correspond to the line to stop in front of for a given intersection
 
-        stop_line_pos = None
+        stop_waypoint = None
 
         if (self.pose):
 
@@ -219,12 +215,10 @@ class TLDetector(object):
                         stop_waypoint = self.get_closest_waypoint(stop_pos.position)
 
         # if we have line and stop line pos then change state and return waypoint
-        print(light)
-        if light:
+        if light and stop_waypoint:
             # todo : we should search in light area
             state = self.get_light_state(light)
             # rospy.logerr('Detected traffic light', light)
-            print('state predicted : ', state)
             return stop_waypoint, state
 
         return -1, TrafficLight.UNKNOWN
