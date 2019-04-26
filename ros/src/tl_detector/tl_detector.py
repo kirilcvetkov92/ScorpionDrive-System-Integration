@@ -8,6 +8,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from light_classification.tl_classifier import TLClassifier
 import tf
+import sys
 import cv2
 import yaml
 
@@ -130,7 +131,7 @@ class TLDetector(object):
         return stop_line_positions
 
     def get_closest_index(self, pose, positions):
-        minimal_distance = 9999999
+        minimal_distance = sys.maxsize
         index = -1
 
         for i in range(len(positions)):
