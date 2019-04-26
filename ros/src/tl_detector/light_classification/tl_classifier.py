@@ -8,13 +8,13 @@ from keras.models import load_model
 from keras.layers import Input
 from yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
 from yolo3.utils import letterbox_image
-
+import tensorflow as tf
 import os
 from PIL import Image
 import cv2
 
-class TLClassifier(object):
 
+class TLClassifier(object):
     _defaults = {
         "model_path": 'light_classification/model_data/yolo.h5',
         "anchors_path": 'light_classification/model_data/yolo_anchors.txt',
@@ -34,9 +34,10 @@ class TLClassifier(object):
         self.boxes, self.scores, self.classes = self.generate()
 
         self.class_msgs = {'red': TrafficLight.RED,
-                        'green': TrafficLight.YELLOW,
-                        'blue': TrafficLight.GREEN,
-                        'unknown': TrafficLight.UNKNOWN}
+                           'green': TrafficLight.YELLOW,
+                           'yellow': TrafficLight.GREEN,
+                           'unknown': TrafficLight.UNKNOWN}
+        self.graph = tf.get_default_graph()
 
     def generate(self):
         model_path = os.path.expanduser(self.model_path)
@@ -45,7 +46,7 @@ class TLClassifier(object):
         # Load model, or construct model and load weights.
         num_anchors = len(self.anchors)
         num_classes = len(self.class_names)
-        is_tiny_version = num_anchors==6 # default setting
+        is_tiny_version = num_anchors == 6  # default setting
 
         try:
             self.yolo_model = load_model(model_path, compile=False)
@@ -101,9 +102,12 @@ class TLClassifier(object):
 
         start = timer()
 
+        # print('1')
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # print(image.shape)
         image = Image.fromarray(image)
-
+        # print(image.width)
+        # print('2')
         if self.model_image_size != (None, None):
             assert self.model_image_size[0] % 32 == 0, 'Multiples of 32 required'
             assert self.model_image_size[1] % 32 == 0, 'Multiples of 32 required'
@@ -118,13 +122,14 @@ class TLClassifier(object):
         image_data /= 255.
         image_data = np.expand_dims(image_data, 0)  # Add batch dimension.
 
-        out_boxes, out_scores, out_classes = self.sess.run(
-            [self.boxes, self.scores, self.classes],
-            feed_dict={
-                self.yolo_model.input: image_data,
-                self.input_image_shape: [image.size[1], image.size[0]],
-                K.learning_phase(): 0
-            })
+        with self.graph.as_default():
+            out_boxes, out_scores, out_classes = self.sess.run(
+                [self.boxes, self.scores, self.classes],
+                feed_dict={
+                    self.yolo_model.input: image_data,
+                    self.input_image_shape: [image.size[1], image.size[0]],
+                    K.learning_phase(): 0
+                })
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
@@ -132,13 +137,12 @@ class TLClassifier(object):
             predicted_class = self.class_names[c]
             score = out_scores[i]
 
+            print('state predicted celosno : ', predicted_class)
             return self.class_msgs[predicted_class], score
-            #return predicted_class, score
+            # return predicted_class, score
         end = timer()
         print(end - start)
-        return image
-
-
+        return TrafficLight.UNKNOWN, -1.0
 
 # if __name__ == "__main__":
 #     t = TLClassifier()

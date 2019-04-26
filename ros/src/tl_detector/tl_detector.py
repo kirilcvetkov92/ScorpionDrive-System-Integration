@@ -12,6 +12,7 @@ import sys
 import cv2
 import yaml
 import math
+from timeit import default_timer as timer
 
 STATE_COUNT_THRESHOLD = 3
 DISTANCE_THRESHOLD = 280
@@ -25,7 +26,7 @@ class TLDetector(object):
         self.waypoints = None
         self.camera_image = None
         self.lights = []
-
+        self.image_processing_time = 0
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
@@ -48,6 +49,7 @@ class TLDetector(object):
         self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
 
+        print('init state')
         self.state = TrafficLight.UNKNOWN
         self.last_state = TrafficLight.UNKNOWN
         self.last_wp = -1
@@ -59,6 +61,7 @@ class TLDetector(object):
         self.pose = msg
 
     def waypoints_cb(self, waypoints):
+        print('okay')
         self.waypoints = waypoints
 
     def traffic_cb(self, msg):
@@ -72,9 +75,19 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
+        # Skip Traffic Light Detection if processing takes longer than current frequency, avoid queueing
+        if self.image_processing_time > 0:
+            self.image_processing_time -= self.sleep(10.0)
+            # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
+            return
+
         self.has_image = True
         self.camera_image = msg
+
+        start_detection = timer()
         light_wp, state = self.process_traffic_lights()
+        end_detection = timer()
+        self.image_processing_time = end_detection - start_detection
 
         '''
         Publish upcoming red lights at camera frequency.
@@ -82,6 +95,8 @@ class TLDetector(object):
         of times till we start using it. Otherwise the previous stable state is
         used.
         '''
+        print('proverka')
+
         if self.state != state:
             self.state_count = 0
             self.state = state
@@ -120,6 +135,8 @@ class TLDetector(object):
         car_pos = self.waypoints.waypoints[car_inx].pose.pose.position
         return car_pos
 
+    def sleep(self, time):
+        return time / 100.0
 
     def get_stop_line_3d_positions(self):
         stop_line_positions = []
@@ -153,13 +170,13 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        if(not self.has_image):
+        if (not self.has_image):
             self.prev_light_loc = None
             return False
 
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
-
-        #Get classification
+        print('shapesss', cv_image.shape)
+        # Get classification
         return self.light_classifier.get_classification(cv_image)
 
     def process_traffic_lights(self):
@@ -177,21 +194,22 @@ class TLDetector(object):
 
         stop_line_pos = None
 
-        if(self.pose):
+        if (self.pose):
 
-            #get car index, car position
+            # get car index, car position
             car_waypoiny_inx = self.get_car_waypoint_index()
             car_waypoint_pos = self.get_car_waypoint_position()
 
-            #get light index
+            # get light index
             light_inx = self.get_closest_light(car_waypoint_pos)
+
             if light_inx != -1:
 
-                #get closest waypoint to light index
+                # get closest waypoint to light index
                 light_waypoint_inx = self.get_closest_waypoint(self.lights[light_inx].pose.pose.position)
                 light_pos = self.waypoints.waypoints[light_waypoint_inx].pose.pose.position
 
-                #get stop line waypoint
+                # get stop line waypoint
                 if light_waypoint_inx > car_waypoiny_inx:
                     distance_to_traffic_light = self.get_distance(car_waypoint_pos, light_pos)
                     if distance_to_traffic_light < DISTANCE_THRESHOLD:
@@ -200,18 +218,20 @@ class TLDetector(object):
                         stop_pos = self.get_stop_line_3d_positions()[stop_inx].pose.pose
                         stop_waypoint = self.get_closest_waypoint(stop_pos.position)
 
-        #if we have line and stop line pos then change state and return waypoint
-        if light and stop_line_pos:
-            #todo : we should search in light area
+        # if we have line and stop line pos then change state and return waypoint
+        print(light)
+        if light:
+            # todo : we should search in light area
             state = self.get_light_state(light)
-            rospy.logerr('Detected traffic light', light)
-
+            # rospy.logerr('Detected traffic light', light)
+            print('state predicted : ', state)
             return stop_waypoint, state
 
         return -1, TrafficLight.UNKNOWN
 
     def get_distance(self, p1, p2):
         return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2 + (p1.z - p2.z) ** 2)
+
 
 if __name__ == '__main__':
     try:
