@@ -135,7 +135,7 @@ class TLDetector(object):
         index = -1
 
         for i in range(len(positions)):
-            distance = self.distance_of_positions(pose, positions[i].pose.pose.position)
+            distance = self.get_distance(pose, positions[i].pose.pose.position)
             if distance < minimal_distance:
                 minimal_distance = distance
                 index = i
@@ -192,7 +192,7 @@ class TLDetector(object):
 
                 #get stop line waypoint
                 if light_waypoint_inx > car_waypoiny_inx:
-                    distance_to_traffic_light = self.distance_of_positions(car_waypoint_pos, light_pos)
+                    distance_to_traffic_light = self.get_distance(car_waypoint_pos, light_pos)
                     if distance_to_traffic_light < DISTANCE_THRESHOLD:
                         light = self.lights[light_inx]
                         stop_inx = self.get_closest_stop_line(light_pos)
@@ -203,10 +203,14 @@ class TLDetector(object):
         if light and stop_line_pos:
             #todo : we should search in light area
             state = self.get_light_state(light)
+            rospy.logerr('Detected traffic light', light)
+
             return stop_waypoint, state
 
         return -1, TrafficLight.UNKNOWN
 
+     def get_distance(self, p1, p2):
+            return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2 + (p1.z - p2.z) ** 2)
 
 if __name__ == '__main__':
     try:
