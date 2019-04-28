@@ -14,7 +14,7 @@ import yaml
 import math
 from timeit import default_timer as timer
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 1
 DISTANCE_THRESHOLD = 280
 
 
@@ -75,7 +75,7 @@ class TLDetector(object):
         """
         # Skip Traffic Light Detection if processing takes longer than current frequency, avoid queueing
         if self.image_processing_time > 0:
-            self.image_processing_time -= self.sleep(10.0)
+            self.image_processing_time -= self.sleep(20.0)
             return
             # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
 
@@ -83,7 +83,7 @@ class TLDetector(object):
         self.camera_image = msg
 
         start_detection = timer()
-        light_wp, state = self.process_traffic_lights()
+        light_wp, nn_output = self.process_traffic_lights()
         end_detection = timer()
         self.image_processing_time = end_detection - start_detection
 
@@ -93,14 +93,17 @@ class TLDetector(object):
         of times till we start using it. Otherwise the previous stable state is
         used.
         '''
+        # print(nn_output)
+        state, prob = nn_output
 
         if self.state != state:
             self.state_count = 0
             self.state = state
         elif self.state_count >= STATE_COUNT_THRESHOLD:
             self.last_state = self.state
-            light_wp = light_wp if state == TrafficLight.RED or state == TrafficLight.YELLOW else -1
+            light_wp = light_wp if (state == TrafficLight.RED or state == TrafficLight.YELLOW) else -1
             self.last_wp = light_wp
+
             self.upcoming_red_light_pub.publish(Int32(light_wp))
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
@@ -221,7 +224,7 @@ class TLDetector(object):
             # rospy.logerr('Detected traffic light', light)
             return stop_waypoint, state
 
-        return -1, TrafficLight.UNKNOWN
+        return -1, (TrafficLight.UNKNOWN, 1)
 
     def get_distance(self, p1, p2):
         return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2 + (p1.z - p2.z) ** 2)
