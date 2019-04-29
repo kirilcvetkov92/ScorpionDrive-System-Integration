@@ -13,8 +13,9 @@ import cv2
 import yaml
 import math
 from timeit import default_timer as timer
+#import scipy
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 0
 DISTANCE_THRESHOLD = 280
 
 
@@ -49,7 +50,6 @@ class TLDetector(object):
         self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
 
-
         self.last_state = TrafficLight.UNKNOWN
         self.last_wp = -1
         self.state_count = 0
@@ -73,9 +73,10 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
+        # print(TrafficLight.GREEN)
         # Skip Traffic Light Detection if processing takes longer than current frequency, avoid queueing
         if self.image_processing_time > 0:
-            self.image_processing_time -= self.sleep(20.0)
+            self.image_processing_time -= self.sleep(10.0)
             return
             # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
 
@@ -95,15 +96,13 @@ class TLDetector(object):
         '''
         # print(nn_output)
         state, prob = nn_output
-
+        # print('state_count=', self.state_count)
         if self.state != state:
             self.state_count = 0
             self.state = state
-        elif self.state_count >= STATE_COUNT_THRESHOLD:
             self.last_state = self.state
             light_wp = light_wp if (state == TrafficLight.RED or state == TrafficLight.YELLOW) else -1
             self.last_wp = light_wp
-
             self.upcoming_red_light_pub.publish(Int32(light_wp))
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
@@ -175,6 +174,8 @@ class TLDetector(object):
             return False
 
         cv_image = self.bridge.imgmsg_to_cv2(self.camera_image, "bgr8")
+        # cv_image = scipy.misc.imresize(cv_image, 0.85)
+
         # Get classification
         return self.light_classifier.get_classification(cv_image)
 
@@ -220,8 +221,10 @@ class TLDetector(object):
         # if we have line and stop line pos then change state and return waypoint
         if light and stop_waypoint:
             # todo : we should search in light area
-            state = (light.state,100) #self.get_light_state(light)
-            # rospy.logerr('Detected traffic light', light)
+            # state = (light.state,100) #self.get_light_state(light)
+            state = self.get_light_state(light)
+
+            # ('Detected state : ', state)
             return stop_waypoint, state
 
         return -1, (TrafficLight.UNKNOWN, 1)
