@@ -113,7 +113,7 @@ class TLClassifier(object):
             boxed_image = letterbox_image(image, new_image_size)
         image_data = np.array(boxed_image, dtype='float32')
 
-        print(image_data.shape)
+        #print(image_data.shape)
         image_data /= 255.
         image_data = np.expand_dims(image_data, 0)  # Add batch dimension.
 
@@ -126,7 +126,7 @@ class TLClassifier(object):
                     K.learning_phase(): 0
                 })
 
-        print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
+        #print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
@@ -136,7 +136,7 @@ class TLClassifier(object):
             return self.class_msgs[predicted_class], score
             # return predicted_class, score
         end = timer()
-        print(end - start)
+        #print(end - start)
         return TrafficLight.UNKNOWN, -1.0
 
 # if __name__ == "__main__":
