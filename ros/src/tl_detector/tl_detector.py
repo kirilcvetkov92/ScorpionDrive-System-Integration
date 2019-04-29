@@ -14,7 +14,7 @@ import yaml
 import math
 from timeit import default_timer as timer
 
-STATE_COUNT_THRESHOLD = 1
+STATE_COUNT_THRESHOLD = 3
 DISTANCE_THRESHOLD = 280
 
 
@@ -29,7 +29,7 @@ class TLDetector(object):
         self.image_processing_time = 0
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
-
+        self.state = TrafficLight.UNKNOWN
         '''
         /vehicle/traffic_lights provides you with the location of the traffic light in 3D map space and
         helps you acquire an accurate ground truth data source for the traffic light
@@ -49,7 +49,7 @@ class TLDetector(object):
         self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
 
-        self.state = TrafficLight.UNKNOWN
+
         self.last_state = TrafficLight.UNKNOWN
         self.last_wp = -1
         self.state_count = 0
@@ -220,7 +220,7 @@ class TLDetector(object):
         # if we have line and stop line pos then change state and return waypoint
         if light and stop_waypoint:
             # todo : we should search in light area
-            state = self.get_light_state(light)
+            state = (light.state,100) #self.get_light_state(light)
             # rospy.logerr('Detected traffic light', light)
             return stop_waypoint, state
 
