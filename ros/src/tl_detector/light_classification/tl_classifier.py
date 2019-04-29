@@ -34,8 +34,8 @@ class TLClassifier(object):
         self.boxes, self.scores, self.classes = self.generate()
 
         self.class_msgs = {'red': TrafficLight.RED,
-                           'green': TrafficLight.YELLOW,
-                           'yellow': TrafficLight.GREEN,
+                           'yellow': TrafficLight.YELLOW,
+                           'green': TrafficLight.GREEN,
                            'unknown': TrafficLight.UNKNOWN}
         self.graph = tf.get_default_graph()
 
