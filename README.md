@@ -1,3 +1,50 @@
+# System Integration
+
+This is our very last project for the udacity self driving car nanodegree course.  
+Also this was the only team project where we had the opportunity to co-operate 5 team members from two continents and four different countries: Canada, California (U.S), Massachusetts (U.S), Dominican Republic and a very small country Northern Macedonia.
+
+<p align="center">
+   <img src="imgs/logo.png" width="50%" height="50%">
+</p>
+
+
+Name | Email| GitHub | Location | Task
+------------ | ------------- | ------------- | ------------- | -------------
+Kiril Cvetkov (team lead) | myblueiceeyes@hotmail.com | @kirilcvetkov92 | Skopje, Macedonia| Traffic Light Detector and Waypoint Publishing
+Ronald Evans | ron@cancunron.com | @rons-git | Colorado, U.S | DBW Node, Twist Controller
+Pavel Simo | pavel.simo@gmail.com | @pavelsimo | Dominican Republic | DBW Node, Twist Controller
+Anam Yunus | anam.yunus@gmail.com | @anammy | Toronto, ON, Canada | Waypoint Updater Partial/Full
+Tseng Hui Ko | kevinko1788@gmail.com | @kevinko1788 | Los Angeles, CA|  Waypoint Updater Partial/Full
+
+
+
+
+
+## Project functionality:
+* The vehicle can run safely and complete the entire road(7KM).
+* The vehicle can accurately recognize the current state of traffic lights.
+* The vehicle will stop at the red light or yellow light and pass by the green light
+
+## General ROS Architecture
+<p align="center">
+   <img src="imgs/ros-graph.png" width="80%" height="80%">
+</p>
+
+
+# Responsibilities 
+
+<p align="center">
+   <img src="imgs/team_part1.png" width="50%" height="50%">
+</p>
+
+<p align="center">
+   <img src="imgs/team_part2.png" width="50%" height="50%">
+</p>
+
+<p align="center">
+   <img src="imgs/team_part3.png" width="50%" height="50%">
+</p>
+
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
 Please use **one** of the two installation options, either native **or** docker installation.
