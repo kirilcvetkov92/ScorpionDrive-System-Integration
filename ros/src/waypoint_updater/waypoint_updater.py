@@ -2,7 +2,7 @@
 
 import rospy
 import numpy as np
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, TwistStamped
 from styx_msgs.msg import Lane, Waypoint
 from scipy.spatial import KDTree
 from std_msgs.msg import Int32
@@ -25,7 +25,8 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
 LOOKAHEAD_WPS = 50 # Number of waypoints we will publish. You can change this number
-MAX_DECEL = .5
+ACT_DECEL = 0.5
+MAX_DECEL = 0.75
 
 class WaypointUpdater(object):
     def __init__(self):
@@ -36,6 +37,7 @@ class WaypointUpdater(object):
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
+        rospy.Subscriber('/current_velocity', TwistStamped, self.current_vel_cb)
 
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
@@ -45,6 +47,7 @@ class WaypointUpdater(object):
         self.waypoints_2d = None
         self.waypoint_tree = None
         self.stopline_wp_idx = -1
+        self.cur_vel = None
 
         self.loop()
 
@@ -102,13 +105,17 @@ class WaypointUpdater(object):
         for i, wp in enumerate(waypoints):
             p = Waypoint()
             p.pose = wp.pose
-            stop_idx = max(self.stopline_wp_idx - closest_idx - 2, 0) # Two waypoints back from line so front of car stops at line
+            stop_idx = max(self.stopline_wp_idx - closest_idx - 4, 0) # Two waypoints back from line so front of car stops at line
             dist = self.distance(waypoints, i, stop_idx)
-            vel = math.sqrt(2*MAX_DECEL*dist)
-            if vel < 1.:
-                vel = 0.
-
-            p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x)
+            braking_dist = (self.cur_vel)**2/(2*MAX_DECEL)
+            if (dist <= braking_dist):
+                vel = math.sqrt(2*ACT_DECEL*dist)
+                if vel < 1.:
+                    vel = 0.
+                p.twist.twist.linear.x = min(self.cur_vel, min(vel, wp.twist.twist.linear.x))
+            #rospy.loginfo("self.stopline_wp_idx: %d, stop_idx: %d, i: %d, Dist: %f, vel: %f, cur_vel: %f", self.stopline_wp_idx, stop_idx, i, dist, vel, self.cur_vel)
+            else:
+                p.twist.twist.linear.x = wp.twist.twist.linear.x
             temp.append(p)
 
         return temp
@@ -133,6 +140,9 @@ class WaypointUpdater(object):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later
         pass
 
+    def current_vel_cb(self, msg):
+        self.cur_vel = msg.twist.linear.x
+
     def get_waypoint_velocity(self, waypoint):
         return waypoint.twist.twist.linear.x
 
@@ -140,11 +150,12 @@ class WaypointUpdater(object):
         waypoints[waypoint].twist.twist.linear.x = velocity
 
     def distance(self, waypoints, wp1, wp2):
-        dist = 0
+        dist = 0.
         dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2)
         for i in range(wp1, wp2+1):
             dist += dl(waypoints[wp1].pose.pose.position, waypoints[i].pose.pose.position)
             wp1 = i
+        #rospy.loginfo("Dist: %f", dist)
         return dist
 
 
