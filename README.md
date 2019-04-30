@@ -1,7 +1,7 @@
 # System Integration
 
 This is our very last project for the udacity self driving car nanodegree course.  
-Also this was the only team project where we had the opportunity to co-operate 5 team members from 2 continents and 4 different countries: Canada, California (U.S), Massachusetts (U.S), Dominican Republic and a very small country Northern Macedonia.
+Also this was the only team project where we had the opportunity to co-operate 5 team members from 2 continents and 4 different countries: Canada, California (U.S), Massachusetts (U.S), Dominican Republic and a very small country North Macedonia.
 
 <p align="center">
    <img src="imgs/logo.png" width="50%" height="50%">
