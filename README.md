@@ -51,8 +51,9 @@ Please use **one** of the two installation options, either native **or** docker 
 
 
 ### Pretrained model Weights
-* [Download](https://www.dropbox.com/s/igacgbznnqy9eyt/yolo.h5?dl=0)  
-* Place it inside : 'light_classification/model_data/yolo.h5',
+* [Download Simulator weights](https://www.dropbox.com/s/igacgbznnqy9eyt/yolo.h5?dl=0)  
+* [Download Real-World weights](https://www.dropbox.com/s/hniy9ykxy3k1iai/yolo.h5?dl=0)
+* Place one of them inside : 'light_classification/model_data/yolo.h5',
 
 ### Native Installation
 
