@@ -51,9 +51,10 @@ Please use **one** of the two installation options, either native **or** docker 
 
 
 ### Pretrained model Weights
-* [Download Simulator weights and anchors ](https://www.dropbox.com/sh/c827e8nw9uxltvs/AACCUeUG5hyLNlRx6uDqu934a?dl=0)  
-* [Download Real-World weights and anchors](https://www.dropbox.com/sh/4yjphz0paig3ull/AACB5z_f-l_L6DN8eU_dmxATa?dl=0)
-* Place Simulator or Real-World data inside : ros/src/tl_detector/light_classification/model_data/,
+* [Download Simulator weights](https://www.dropbox.com/sh/c827e8nw9uxltvs/AACCUeUG5hyLNlRx6uDqu934a?dl=0) 
+* Place Simulator data inside : ros/src/tl_detector/light_classification/model_data_sim/,
+* [Download Real-World weights](https://www.dropbox.com/sh/4yjphz0paig3ull/AACB5z_f-l_L6DN8eU_dmxATa?dl=0)
+* Place Real-World data inside : ros/src/tl_detector/light_classification/model_data_real/,
 
 ### Native Installation
 
