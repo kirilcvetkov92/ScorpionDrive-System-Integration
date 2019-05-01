@@ -51,10 +51,9 @@ Please use **one** of the two installation options, either native **or** docker 
 
 
 ### Pretrained model Weights
-* [Download Simulator weights](https://www.dropbox.com/s/igacgbznnqy9eyt/yolo.h5?dl=0)  
-* [Download Real-World weights](https://www.dropbox.com/s/hniy9ykxy3k1iai/yolo.h5?dl=0)
-* [Download Real-World anchors](https://www.dropbox.com/s/dzj7057njjt849l/yolo_anchors.txt?dl=0)
-* Place one of them inside : 'light_classification/model_data/yolo.h5',
+* [Download Simulator weights and anchors ](https://www.dropbox.com/sh/c827e8nw9uxltvs/AACCUeUG5hyLNlRx6uDqu934a?dl=0)  
+* [Download Real-World weights and anchors](https://www.dropbox.com/sh/4yjphz0paig3ull/AACB5z_f-l_L6DN8eU_dmxATa?dl=0)
+* Place Simulator or Real-World data inside : ros/src/tl_detector/light_classification/model_data/,
 
 ### Native Installation
 
