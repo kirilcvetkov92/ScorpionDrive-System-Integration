@@ -43,12 +43,15 @@ class TLDetector(object):
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
 
+        self.is_sim = not self.config["is_site"]
+
+        print("Is Sim %d" % self.is_sim)
+
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
-        self.light_classifier = TLClassifier()
+        self.light_classifier = TLClassifier(self.is_sim)
         self.listener = tf.TransformListener()
-
 
         self.last_state = TrafficLight.UNKNOWN
         self.last_wp = -1
@@ -220,7 +223,7 @@ class TLDetector(object):
         # if we have line and stop line pos then change state and return waypoint
         if light and stop_waypoint:
             # todo : we should search in light area
-            state = (light.state,100) #self.get_light_state(light)
+            state = (light.state, 100)  # self.get_light_state(light)
             # rospy.logerr('Detected traffic light', light)
             return stop_waypoint, state
 

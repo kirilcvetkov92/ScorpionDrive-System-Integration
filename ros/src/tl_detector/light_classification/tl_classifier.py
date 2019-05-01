@@ -15,18 +15,31 @@ import cv2
 
 
 class TLClassifier(object):
-    _defaults = {
-        "model_path": 'light_classification/model_data/yolo.h5',
-        "anchors_path": 'light_classification/model_data/yolo_anchors.txt',
-        "classes_path": 'light_classification/model_data/voc_classes.txt',
+    _defaults_sim = {
+        "model_path": 'light_classification/model_data_sim/yolo.h5',
+        "anchors_path": 'light_classification/model_data_sim/yolo_anchors.txt',
+        "classes_path": 'light_classification/model_data_sim/voc_classes.txt',
         "score": 0.6,
         "iou": 0.5,
         "model_image_size": (416, 416),
         "gpu_num": 1,
     }
 
-    def __init__(self, **kwargs):
-        self.__dict__.update(self._defaults)
+    _defaults_real = {
+        "model_path": 'light_classification/model_data_real/yolo.h5',
+        "anchors_path": 'light_classification/model_data_real/yolo_anchors.txt',
+        "classes_path": 'light_classification/model_data_real/voc_classes.txt',
+        "score": 0.6,
+        "iou": 0.5,
+        "model_image_size": (416, 416),
+        "gpu_num": 1,
+    }
+
+    def __init__(self, is_sim, **kwargs):
+        if is_sim:
+            self.__dict__.update(self._defaults_sim)
+        else:
+            self.__dict__.update(self._defaults_real)
         self.__dict__.update(kwargs)
         self.class_names = self._get_class()
         self.anchors = self._get_anchors()
@@ -113,7 +126,7 @@ class TLClassifier(object):
             boxed_image = letterbox_image(image, new_image_size)
         image_data = np.array(boxed_image, dtype='float32')
 
-        #print(image_data.shape)
+        # print(image_data.shape)
         image_data /= 255.
         image_data = np.expand_dims(image_data, 0)  # Add batch dimension.
 
@@ -126,7 +139,7 @@ class TLClassifier(object):
                     K.learning_phase(): 0
                 })
 
-        #print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
+        # print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
@@ -136,7 +149,7 @@ class TLClassifier(object):
             return self.class_msgs[predicted_class], score
             # return predicted_class, score
         end = timer()
-        #print(end - start)
+        # print(end - start)
         return TrafficLight.UNKNOWN, -1.0
 
 # if __name__ == "__main__":
