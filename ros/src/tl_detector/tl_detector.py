@@ -223,7 +223,7 @@ class TLDetector(object):
         # if we have line and stop line pos then change state and return waypoint
         if light and stop_waypoint:
             # todo : we should search in light area
-            state = (light.state, 100)  # self.get_light_state(light)
+            state = self.get_light_state(light)
             # rospy.logerr('Detected traffic light', light)
             return stop_waypoint, state
 
