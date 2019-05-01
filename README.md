@@ -1,7 +1,6 @@
-# System Integration
+# Programming a Real Self-Driving Car
 
-This is our very last project for the udacity self driving car nanodegree course.  
-Also this was the only team project where we had the opportunity to co-operate 5 team members from 2 continents and 4 different countries: Canada, California (U.S), Massachusetts (U.S), Dominican Republic and a very small country North Macedonia.
+ Welcome to *Scorpion Drive's* capstone project for the Udacity Self-Driving Car Engineer Nanodegree Program: **Programming a Real Self-Driving Car**. This was the only project that gave students the opportunity to work as a team.  The *Scorpion Drive* team consisted of five members from two continents and four countries: **Canada**, the **United States** (California and Massachusetts), the **Dominican Republic** and the very small country of **North Macedonia**.
 
 <p align="center">
    <img src="imgs/logo.png" width="50%" height="50%">
@@ -11,19 +10,22 @@ Also this was the only team project where we had the opportunity to co-operate 5
 Name | Email| GitHub | Location | Task
 ------------ | ------------- | ------------- | ------------- | -------------
 Kiril Cvetkov (team lead) | myblueiceeyes@hotmail.com | @kirilcvetkov92 | Skopje, Macedonia| Traffic Light Detector and Waypoint Publishing
-Ronald Evans | ron@cancunron.com | @rons-git | Colorado, U.S | DBW Node, Twist Controller
+Ronald Evans | ron@cancunron.com | @rons-git | Cape Cod, MA, U.S. | DBW Node, Twist Controller
 Pavel Simo | pavel.simo@gmail.com | @pavelsimo | Dominican Republic | DBW Node, Twist Controller
 Anam Yunus | anam.yunus@gmail.com | @anammy | Toronto, ON, Canada | Waypoint Updater Partial/Full
-Tseng Hui Ko | kevinko1788@gmail.com | @kevinko1788 | Los Angeles, CA|  Waypoint Updater Partial/Full
+Tseng Hui Ko | kevinko1788@gmail.com | @kevinko1788 | Los Angeles, CA, U.S.|  Waypoint Updater Partial/Full
 
 
 
 
 
-## Project functionality:
-* The vehicle can run safely and complete the entire road(7KM).
-* The vehicle can accurately recognize the current state of traffic lights.
-* The vehicle will stop at the red light or yellow light and pass by the green light
+## Project Specification
+#### The submitted code works successfuly to navigate the car around the simulator track:
+- [x] The vehicle runs safely and completes the entire course (7KM),
+
+- [x] The vehicle accurately detects the illuminated color of all traffic lights,
+
+- [x] The vehicle stops when traffic lights are red or yellow and proceeds when traffic lights are green.
 
 ## General ROS Architecture
 <p align="center">
@@ -45,21 +47,22 @@ Tseng Hui Ko | kevinko1788@gmail.com | @kevinko1788 | Los Angeles, CA|  Waypoint
    <img src="imgs/team_part3.png" width="50%" height="50%">
 </p>
 
-This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
+# Project Repository
+The capstone's project repository is presented below. For background information on this project, see the introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
-Please use **one** of the two installation options, either native **or** docker installation.
-
-
-### Pretrained model Weights
+## Pretrained Model Weights
 * [Download Simulator weights](https://www.dropbox.com/sh/c827e8nw9uxltvs/AACCUeUG5hyLNlRx6uDqu934a?dl=0) 
 * Place Simulator data inside : ros/src/tl_detector/light_classification/model_data_sim/,
 * [Download Real-World weights](https://www.dropbox.com/sh/4yjphz0paig3ull/AACB5z_f-l_L6DN8eU_dmxATa?dl=0)
 * Place Real-World data inside : ros/src/tl_detector/light_classification/model_data_real/,
 
-### Native Installation
+
+## Installations
+Use **one** of the two installation options, either native **or** docker installation.
+#### Native Installation
 
 * Be sure that your workstation is running Ubuntu 16.04 Xenial Xerus or Ubuntu 14.04 Trusty Tahir. [Ubuntu downloads can be found here](https://www.ubuntu.com/download/desktop).
-* If using a Virtual Machine to install Ubuntu, use the following configuration as minimum:
+* If using a Virtual Machine to install Ubuntu, use the following configuration as a minimum:
   * 2 CPU
   * 2 GB system memory
   * 25 GB of free hard drive space
@@ -73,7 +76,7 @@ Please use **one** of the two installation options, either native **or** docker 
   * Use this option to install the SDK on a workstation that already has ROS installed: [One Line SDK Install (binary)](https://bitbucket.org/DataspeedInc/dbw_mkz_ros/src/81e63fcc335d7b64139d7482017d6a97b405e250/ROS_SETUP.md?fileviewer=file-view-default)
 * Download the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases).
 
-### Docker Installation
+#### Docker Installation
 [Install Docker](https://docs.docker.com/engine/installation/)
 
 Build the docker container
@@ -86,10 +89,10 @@ Run the docker file
 docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
 ```
 
-### Port Forwarding
+## Port Forwarding
 To set up port forwarding, please refer to the [instructions from term 2](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/16cf4a78-4fc7-49e1-8621-3450ca938b77)
 
-### Usage
+## Usage
 
 1. Clone the project repository
 ```bash
@@ -110,8 +113,8 @@ roslaunch launch/styx.launch
 ```
 4. Run the simulator
 
-### Real world testing
-1. Download [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
+## Real world testing
+1. Download the  [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
 2. Unzip the file
 ```bash
 unzip traffic_light_bag_file.zip
