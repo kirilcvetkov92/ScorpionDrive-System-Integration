@@ -75,7 +75,7 @@ class TLDetector(object):
         """
         # Skip Traffic Light Detection if processing takes longer than current frequency, avoid queueing
         if self.image_processing_time > 0:
-            self.image_processing_time -= self.sleep(20.0)
+            self.image_processing_time -= self.sleep(10.0)
             return
             # rospy.logwarn("Skipping traffic light detection for this frame ...: %f s", self.image_processing_time)
 
