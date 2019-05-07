@@ -7,13 +7,13 @@
 </p>
 
 
-Name | Email| GitHub | Location | Task
------------- | ------------- | ------------- | ------------- | -------------
-Kiril Cvetkov (team lead) | myblueiceeyes@hotmail.com | @kirilcvetkov92 | Skopje, Macedonia| Traffic Light Detector and Waypoint Publishing
-Ronald Evans | ron@cancunron.com | @rons-git | Cape Cod, MA, U.S. | DBW Node, Twist Controller
-Pavel Simo | pavel.simo@gmail.com | @pavelsimo | Dominican Republic | DBW Node, Twist Controller
-Anam Yunus | anam.yunus@gmail.com | @anammy | Toronto, ON, Canada | Waypoint Updater Partial/Full
-Tseng Hui Ko | kevinko1788@gmail.com | @kevinko1788 | Los Angeles, CA, U.S.|  Waypoint Updater Partial/Full
+Name | GitHub | Location | Task
+------------ | ------------- | ------------- | -------------
+Kiril Cvetkov (team lead)  | @kirilcvetkov92 | Skopje, Macedonia| Traffic Light Detector and Waypoint Publishing
+Ronald Evans | @rons-git | Cape Cod, MA, U.S. | DBW Node, Twist Controller
+Pavel Simo  | @pavelsimo | Dominican Republic | DBW Node, Twist Controller
+Anam Yunus | @anammy | Toronto, ON, Canada | Waypoint Updater Partial/Full
+Tseng Hui Ko | @kevinko1788 | Los Angeles, CA, U.S.|  Waypoint Updater Partial/Full
 
 
 
